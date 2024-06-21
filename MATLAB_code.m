@@ -1,4 +1,4 @@
-datasetPath = 'C:\Users\itsmu\Desktop\NITR\PCG_Data\classification-of-heart-sound-recordings-the-physionet-computing-in-cardiology-challenge-2016-1.0.0';
+datasetPath = 'C:\Users\itsmu\Desktop\NITR\Heart sound classification\PCG\PCG_Data\classification-of-heart-sound-recordings-the-physionet-computing-in-cardiology-challenge-2016-1.0.0';
 folders = {'training-a', 'training-b', 'training-c', 'training-d', 'training-e'};
 normalData = {};
 abnormalData = {};
@@ -77,8 +77,6 @@ function tightfig()
         ax(i).Position = [left, bottom, ax_width, ax_height];
     end
 end
-%% 
-
 DatasetPath = 'C:\Users\itsmu\Desktop\NITR\Heart sound classification\PCG\PCG_Data\pcgdataset11';
 images = imageDatastore(DatasetPath, 'IncludeSubfolders', true, 'LabelSource', 'foldernames');
 [TrainImages, TestImages] = splitEachLabel(images, 0.8);  
@@ -102,42 +100,25 @@ options = trainingOptions('sgdm', ...
 netTransfer = trainNetwork(TrainImages, layers, options);
 YPred = classify(netTransfer, TestImages);
 YValidation = TestImages.Labels;
-accuracy = sum(YPred == YValidation) / numel(YValidation);
 figure;
 plotconfusion(YValidation, YPred);
-
-
-%% % Compute confusion matrix
-% Compute confusion matrix
 C = confusionmat(YValidation, YPred);
-
-% Extract True Positives (TP), True Negatives (TN), False Positives (FP), and False Negatives (FN) from the confusion matrix
 TP = C(1,1);
 FN = C(1,2);
 FP = C(2,1);
 TN = C(2,2);
-
-% Compute accuracy, sensitivity, specificity, precision, and F1 Score
 accuracy_percentage = (sum(YPred == YValidation) / numel(YValidation)) * 100;
 sensitivity = TP / (TP + FN);
 specificity = TN / (TN + FP);
 precision = TP / (TP + FP);
 F1Score = 2 * (precision * sensitivity) / (precision + sensitivity);
-
-% Convert Sensitivity, Specificity, Precision, and F1 Score to percentages
 sensitivity_percentage = sensitivity * 100;
 specificity_percentage = specificity * 100;
 precision_percentage = precision * 100;
 F1Score_percentage = F1Score * 100;
-
-% Display the results
 disp(['Accuracy: ', num2str(accuracy_percentage), '%']);
 disp(['Sensitivity: ', num2str(sensitivity_percentage), '%']);
 disp(['Specificity: ', num2str(specificity_percentage), '%']);
 disp(['Precision: ', num2str(precision_percentage), '%']);
 disp(['F1 Score: ', num2str(F1Score_percentage), '%']);
-
-
-
-
 
